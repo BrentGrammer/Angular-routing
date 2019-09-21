@@ -11,6 +11,7 @@ import { PageNotFoundComponent } from "./page-not-found/page-not-found.component
 import { AuthGuard } from "./auth-guard.service";
 import { CanDeactivateGuard } from "./can-deactivate-guard.service";
 import { ErrorPageComponent } from "./error-page/error-page.component";
+import { ServerResolver } from "./servers/server/server-resolver.service";
 
 // import Routes type from @angular/router
 /**
@@ -28,11 +29,14 @@ const appRoutes: Routes = [
   },
   {
     path: "servers",
-    //canActivate: [AuthGuard],
     canActivateChild: [AuthGuard],
     component: ServersComponent,
     children: [
-      { path: ":id", component: ServerComponent },
+      {
+        path: ":id",
+        component: ServerComponent,
+        resolve: { server: ServerResolver }
+      },
       {
         path: ":id/edit",
         component: EditServerComponent,
@@ -50,7 +54,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(appRoutes)],
+  imports: [RouterModule.forRoot(appRoutes, { useHash: true })],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}
